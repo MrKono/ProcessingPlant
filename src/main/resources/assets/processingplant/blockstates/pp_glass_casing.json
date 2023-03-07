@@ -1,0 +1,17 @@
+{
+  "forge_marker": 1,
+  "variants": {
+    "active=false,variant=water_glass": {
+      "model": "minecraft:cube_all",
+      "textures": {
+        "all": "gregtech:blocks/casings/transparent/water_glass"
+      }
+    },
+    "active=true,variant=water_glass": {
+      "model": "minecraft:cube_all",
+      "textures": {
+        "all": "gregtech:blocks/casings/transparent/water_glass"
+      }
+    }
+  }
+}

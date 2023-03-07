@@ -1,0 +1,13 @@
+#Multiblocks
+processingplant.machine.ore_processing_plant.name=Ore Processing Plant
+
+#Multiblock descriptions
+
+#Block Casings
+tile.block_casing.ore_plant_casing.name=Ore Processing Plant Casing
+
+#Glass Casings
+tile.transparent_casing.water_glass.name=Water Source Glass
+
+#RecipeMaps
+recipemap.ore_processing_plant.name=Ore Processing Plant
