@@ -1,7 +1,17 @@
 #Multiblocks
 processingplant.machine.ore_processing_plant.name=Ore Processing Plant
 
-#Multiblock descriptions
+#Machine descriptions
+processingplant.machine.oreprocessingplant.tooltip1= 
+processingplant.machine.oreprocessingplant.tooltip2= 
+processingplant.machine.oreprocessingplant.tooltip3= 
+
+#Multiblock GUI
+processingplant.multiblock.warning_1=You have to stop Machine to change Recipe Type
+processingplant.multiblock.back=[Back]
+processingplant.multiblock.next=[Next]
+processingplant.multiblock.oreprocessingplant_1=Recipe Type : §a%d
+processingplant.multiblock.oreprocessingplant_2=Set Recipe Type 
 
 #Block Casings
 tile.block_casing.ore_plant_casing.name=Ore Processing Plant Casing
