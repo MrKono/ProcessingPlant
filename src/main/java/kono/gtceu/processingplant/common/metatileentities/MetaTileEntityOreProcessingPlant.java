@@ -13,6 +13,7 @@ import gregtech.api.metatileentity.multiblock.RecipeMapMultiblockController;
 import gregtech.api.pattern.BlockPattern;
 import gregtech.api.pattern.FactoryBlockPattern;
 import gregtech.api.pattern.MultiblockShapeInfo;
+import gregtech.api.recipes.Recipe;
 import gregtech.api.unification.material.Materials;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.cube.OrientedOverlayRenderer;
@@ -22,6 +23,8 @@ import gregtech.common.blocks.BlockMultiblockCasing;
 import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.metatileentities.MetaTileEntities;
 import kono.gtceu.processingplant.api.recipes.PPRecipeMaps;
+import kono.gtceu.processingplant.api.recipes.builders.OreProcessingPlantRecipeBuilder;
+import kono.gtceu.processingplant.api.recipes.recipeproperties.RecipeTypeProperty;
 import kono.gtceu.processingplant.client.PPTextures;
 import kono.gtceu.processingplant.common.PPBlockCasing;
 import kono.gtceu.processingplant.common.PPGlassCasing;
@@ -102,6 +105,55 @@ public class MetaTileEntityOreProcessingPlant extends RecipeMapMultiblockControl
             //動いている場合
             textList.add((new TextComponentTranslation("processingplant.multiblock.warning_1")).setStyle((new Style()).setColor(TextFormatting.LIGHT_PURPLE)));
         }
+        //処理工程表示
+        textList.add(new TextComponentTranslation("processingplant.multiblock.oreprocessingplant_3").setStyle((new Style()).setColor(TextFormatting.YELLOW)));
+        ITextComponent processingType = new TextComponentString("1.");
+        processingType.appendSibling(new TextComponentTranslation("recipemap.macerator.name"));
+        if ((Type < 2) || (Type > 3)) {
+            processingType.appendText(" 2.");
+            processingType.appendSibling(new TextComponentTranslation("recipemap.ore_washer.name"));
+        }
+        if ((Type == 4) || (Type == 5) || (Type == 8) || (Type == 9)) {
+            processingType.appendText(" or ");
+            processingType.appendSibling(new TextComponentTranslation("recipemap.chemical_bath.name"));
+        }
+        if ((Type >= 6 ) && (Type <= 9)) {
+            processingType.appendText(" 3.");
+            processingType.appendText("[");
+            processingType.appendSibling(new TextComponentTranslation("recipemap.sifter.name"));
+            processingType.appendText("]");
+            processingType.appendText(" or ");
+        }
+        if ((Type == 1) || (Type == 2) || (Type == 5) || (Type == 7) || (Type ==9)) {
+            if ((Type == 2)) {
+                processingType.appendText(" 2.");
+                processingType.appendSibling(new TextComponentTranslation("recipemap.thermal_centrifuge.name"));
+                processingType.appendText(" 3.");
+                processingType.appendSibling(new TextComponentTranslation("recipemap.macerator.name"));
+            } else {
+                if ((Type < 6)) {
+                    processingType.appendText(" 3.");
+                }
+                processingType.appendSibling(new TextComponentTranslation("recipemap.thermal_centrifuge.name"));
+                processingType.appendText(" 4.");
+                processingType.appendSibling(new TextComponentTranslation("recipemap.macerator.name"));
+            }
+        } else {
+            if ((Type == 3)) {
+                processingType.appendText(" 2.");
+                processingType.appendSibling(new TextComponentTranslation("recipemap.macerator.name"));
+                processingType.appendText(" 3.");
+                processingType.appendSibling(new TextComponentTranslation("recipemap.centrifuge.name"));
+            } else {
+                if ((Type < 6)) {
+                    processingType.appendText(" 3.");
+                }
+                processingType.appendSibling(new TextComponentTranslation("recipemap.macerator.name"));
+                processingType.appendText(" 4.");
+                processingType.appendSibling(new TextComponentTranslation("recipemap.centrifuge.name"));
+            }
+        }
+        textList.add(processingType);
     }
 
     //ボタンが押されたときの挙動登録
@@ -110,8 +162,8 @@ public class MetaTileEntityOreProcessingPlant extends RecipeMapMultiblockControl
         super.handleDisplayClick(componentData, clickData);
         //"add"とマークされたボタンが押された場合
         if (componentData.equals("add")) {
-            //Type < 10 の時
-            if (Type < 10) {
+            //Type <= 9 の時
+            if (Type <= 8) {
                 //Typeに1を加算
                 Type += 1;
             }
@@ -138,7 +190,11 @@ public class MetaTileEntityOreProcessingPlant extends RecipeMapMultiblockControl
                 .aisle("XXXXXXXXX", "XXXXSXXXX", "XHHHHHHHX", "XXXXXXXXX", "XTTTTTTTX", "XXXXXXXXX", "XXXXXXXXX", "XXXXXXXXX")
                 .where('S', selfPredicate())
                 .where('X', states(PPMetaBlocks.PP_BLOCK_CASING.getState(PPBlockCasing.MetalCasingType.ORE_PLANT)).setMinGlobalLimited(200)
-                        .or(autoAbilities(true, true, true, true, true, false, false)))
+                        .or(autoAbilities(true, true, true, true, true, false, false))
+                        .or(abilities(MultiblockAbility.IMPORT_FLUIDS).setMaxGlobalLimited(3))
+                        .or(abilities(MultiblockAbility.IMPORT_ITEMS).setMinGlobalLimited(1))
+                        .or(abilities(MultiblockAbility.EXPORT_ITEMS).setMinGlobalLimited(1))
+                        .or(abilities(MultiblockAbility.INPUT_ENERGY).setMinGlobalLimited(1).setMaxGlobalLimited(3)))
                 .where('P', states(MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.TITANIUM_PIPE)))
                 .where('H', states(GCYMMetaBlocks.UNIQUE_CASING.getState(BlockUniqueCasing.UniqueCasingType.HEAT_VENT)))
                 .where('G', states(MetaBlocks.MULTIBLOCK_CASING.getState(BlockMultiblockCasing.MultiblockCasingType.GRATE_CASING)))
@@ -221,22 +277,22 @@ public class MetaTileEntityOreProcessingPlant extends RecipeMapMultiblockControl
         return data;
     }
 
-    public void setType(int Type) {
+    /*public void setType(int Type) {
         this.Type = Type;
         if (!getWorld().isRemote) {
             writeCustomData(600, buf -> buf.writeInt(Type));
             markDirty();
         }
-    }
+    }*/
 
-    @Override
+   /* @Override
     public void receiveCustomData(int dataId, PacketBuffer buf) {
         super.receiveCustomData(dataId, buf);
         if (dataId == 600) {
             this.Type = buf.readInt();
             scheduleRenderUpdate();
         }
-    }
+    }*/
 
     @Override
     public void readFromNBT(NBTTagCompound data) {
@@ -257,6 +313,11 @@ public class MetaTileEntityOreProcessingPlant extends RecipeMapMultiblockControl
         super.receiveInitialSyncData(buf);
         this.Type = buf.readInt();
         //this.targetType = buf.readInt();
+    }
+
+    @Override
+    public boolean checkRecipe(Recipe recipe, boolean consumeIfSuccess) {
+        return this.Type == recipe.getProperty(RecipeTypeProperty.getInstance(), 0);
     }
 
     public class OreProcessingPlantLogic extends MultiblockRecipeLogic {

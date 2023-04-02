@@ -10,8 +10,9 @@ processingplant.machine.oreprocessingplant.tooltip3=
 processingplant.multiblock.warning_1=You have to stop Machine to change Recipe Type
 processingplant.multiblock.back=[Back]
 processingplant.multiblock.next=[Next]
-processingplant.multiblock.oreprocessingplant_1=Recipe Type : §a%d
+processingplant.multiblock.oreprocessingplant_1=Recipe Type : %d
 processingplant.multiblock.oreprocessingplant_2=Set Recipe Type 
+processingplant.multiblock.oreprocessingplant_3=Current Processing
 
 #Block Casings
 tile.block_casing.ore_plant_casing.name=Ore Processing Plant Casing
@@ -20,4 +21,5 @@ tile.block_casing.ore_plant_casing.name=Ore Processing Plant Casing
 tile.transparent_casing.water_glass.name=Water Source Glass
 
 #RecipeMaps
+processingplant.recipe.type=Recipe Type: %d
 recipemap.ore_processing_plant.name=Ore Processing Plant

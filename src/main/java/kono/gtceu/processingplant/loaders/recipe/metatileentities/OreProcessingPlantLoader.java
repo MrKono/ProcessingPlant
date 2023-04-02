@@ -65,7 +65,7 @@ public class OreProcessingPlantLoader {
         double amountOfCrushedOre = property.getOreMultiplier();
         int outputMultiplier =  (int) Math.round(amountOfCrushedOre) * 2 * oreTypeMultiplier;
 
-        processCWCC(orePrefix, material, byproductCrush, byproductPure, byproductStack, dustStack, outputMultiplier);//crush,wash, crush,centrifuge
+        processCWCC(orePrefix, material, byproductCrush, byproductPure, byproductStack, dustStack, outputMultiplier);//crush, wash, crush, centrifuge
         processCWTC(orePrefix, material, byproductCrush,  byproductThermal, byproductStack, dustStack, outputMultiplier);//crush, wash, thermal, crush
         processCTC(orePrefix, material, property, byproductCrush, byproductThermal, byproductStack, dustStack, outputMultiplier);//crush, thermal, crush
         processCCC(orePrefix, material, property, byproductCrush, byproductStack, dustStack, outputMultiplier);//crush, crush, centrifuge
@@ -82,7 +82,8 @@ public class OreProcessingPlantLoader {
     public static void processCWCC(OrePrefix orePrefix, Material material, Material byproductCrush, Material byproductPure, ItemStack byproductStack, ItemStack dustStack, int outputMultiplier) {
         if (!dustStack.isEmpty()) {
             RecipeBuilder<?> builder = PPRecipeMaps.ORE_PROCESSING_PLANT.recipeBuilder()
-                    .circuitMeta(0)
+                    //.circuitMeta(0)
+                    .ProceccingType(0)
                     .input(orePrefix, material)
                     .outputs(OreDictUnifier.get(OrePrefix.dust, material, outputMultiplier)) //main
                     .outputs(OreDictUnifier.get(OrePrefix.dustTiny, byproductPure, outputMultiplier)) //centrifuge
@@ -91,7 +92,7 @@ public class OreProcessingPlantLoader {
                             OreDictUnifier.get(OrePrefix.dust, Materials.Stone, outputMultiplier))//wash
                     .chancedOutput(byproductStack, 1400, 850)//crushOre
                     .EUt(VA[LV])
-                    .duration(1200);
+                    .duration(600);
             for (MaterialStack secondaryMaterial : orePrefix.secondaryMaterials) {
                 if (secondaryMaterial.material.hasProperty(PropertyKey.DUST)) {
                     ItemStack dustStackByproduct = OreDictUnifier.getGem(secondaryMaterial);
@@ -106,7 +107,8 @@ public class OreProcessingPlantLoader {
     public static void processCWTC(OrePrefix orePrefix, Material material, Material byproductCrush, Material byproductThermal, ItemStack byproductStack, ItemStack dustStack, int outputMultiplier){
         if (!dustStack.isEmpty()) {
             RecipeBuilder<?> builder = PPRecipeMaps.ORE_PROCESSING_PLANT.recipeBuilder()
-                    .circuitMeta(1)
+                    //.circuitMeta(1)
+                    .ProceccingType(1)
                     .input(orePrefix, material)
                     .outputs(OreDictUnifier.get(OrePrefix.dust, material, outputMultiplier)) //main
                     .chancedOutput(OrePrefix.dust, byproductThermal, outputMultiplier, 1400, 850) //crushCentrifuged
@@ -115,7 +117,7 @@ public class OreProcessingPlantLoader {
                             OreDictUnifier.get(OrePrefix.dust, Materials.Stone, outputMultiplier))//wash byproduct
                     .chancedOutput(byproductStack, 1400, 850)//crushOre
                     .EUt(VA[LV])
-                    .duration(1200);
+                    .duration(600);
             for (MaterialStack secondaryMaterial : orePrefix.secondaryMaterials) {
                 if (secondaryMaterial.material.hasProperty(PropertyKey.DUST)) {
                     ItemStack dustStackByproduct = OreDictUnifier.getGem(secondaryMaterial);
@@ -130,7 +132,8 @@ public class OreProcessingPlantLoader {
     public static void processCTC(OrePrefix orePrefix, Material material, OreProperty property, Material byproductCrush, Material byproductThermal, ItemStack byproductStack, ItemStack dustStack, int outputMultiplier) {
         if (!dustStack.isEmpty()) {
             RecipeBuilder<?> builder = PPRecipeMaps.ORE_PROCESSING_PLANT.recipeBuilder()
-                    .circuitMeta(2)
+                    //.circuitMeta(2)
+                    .ProceccingType(3)
                     .input(orePrefix, material)
                     .outputs(OreDictUnifier.get(OrePrefix.dust, material, outputMultiplier)) //main
                     .chancedOutput(OrePrefix.dust, byproductThermal, outputMultiplier, 1400, 850) //crushCentrifuged
@@ -138,7 +141,7 @@ public class OreProcessingPlantLoader {
                             OreDictUnifier.get(OrePrefix.dust, Materials.Stone, outputMultiplier)) //ThermalCentrifuge
                     .chancedOutput(byproductStack, 1400, 850)//crushOre
                     .EUt(VA[LV])
-                    .duration(1200);
+                    .duration(600);
             for (MaterialStack secondaryMaterial : orePrefix.secondaryMaterials) {
                 if (secondaryMaterial.material.hasProperty(PropertyKey.DUST)) {
                     ItemStack dustStackByproduct = OreDictUnifier.getGem(secondaryMaterial);
@@ -153,7 +156,8 @@ public class OreProcessingPlantLoader {
     public static void processCCC(OrePrefix orePrefix, Material material, OreProperty property, Material byproductCrush, ItemStack byproductStack, ItemStack dustStack, int outputMultiplier) {
         if (!dustStack.isEmpty()) {
             RecipeBuilder<?> builder = PPRecipeMaps.ORE_PROCESSING_PLANT.recipeBuilder()
-                    .circuitMeta(3)
+                    //.circuitMeta(3)
+                    .ProceccingType(3)
                     .input(orePrefix, material)
                     .outputs(OreDictUnifier.get(OrePrefix.dust, material, outputMultiplier));//main
             if (byproductCrush.hasProperty(PropertyKey.DUST)) {//centrifuge
@@ -164,7 +168,7 @@ public class OreProcessingPlantLoader {
             builder.chancedOutput(orePrefix.dust, byproductCrush, property.getByProductMultiplier() * outputMultiplier, 1400, 850) //crush
                     .chancedOutput(byproductStack, 1400, 850)//crushOre
                     .EUt(VA[LV])
-                    .duration(1200);
+                    .duration(600);
             for (MaterialStack secondaryMaterial : orePrefix.secondaryMaterials) {
                 if (secondaryMaterial.material.hasProperty(PropertyKey.DUST)) {
                     ItemStack dustStackByproduct = OreDictUnifier.getGem(secondaryMaterial);
@@ -181,13 +185,14 @@ public class OreProcessingPlantLoader {
         Pair<Material, Integer> washedInTuple = property.getWashedIn();
         if (!dustStack.isEmpty()) {
             RecipeBuilder<?> builder = PPRecipeMaps.ORE_PROCESSING_PLANT.recipeBuilder()
-                    .circuitMeta(4)
+                    //.circuitMeta(4)
+                    .ProceccingType(4)
                     .input(orePrefix, material)
                     .outputs(OreDictUnifier.get(OrePrefix.dust, material, outputMultiplier)) //main
                     .outputs(OreDictUnifier.get(OrePrefix.dustTiny, byproductPure, outputMultiplier)) //centrifuge
                     .chancedOutput(orePrefix.dust, byproductPure, outputMultiplier, 1400, 850) //crushPurified
                     .EUt(VA[LV])
-                    .duration(1200);
+                    .duration(600);
             if (property.getWashedIn().getKey() != null) { //Bath process
                 builder.fluidInputs(washedInTuple.getKey().getFluid(washedInTuple.getValue() * outputMultiplier))
                         .chancedOutput(orePrefix.dust, byproductBath, property.getByProductMultiplier() * outputMultiplier, 7000, 500)
@@ -212,14 +217,15 @@ public class OreProcessingPlantLoader {
         Pair<Material, Integer> washedInTuple = property.getWashedIn();
         if (!dustStack.isEmpty()) {
             RecipeBuilder<?> builder = PPRecipeMaps.ORE_PROCESSING_PLANT.recipeBuilder()
-                    .circuitMeta(5)
+                    //.circuitMeta(5)
+                    .ProceccingType(5)
                     .input(orePrefix, material)
                     .outputs(OreDictUnifier.get(OrePrefix.dust, material, outputMultiplier)) //main
                     .chancedOutput(OrePrefix.dust, byproductThermal, outputMultiplier, 1400, 850) //crushCentrifuged
                     .outputs(OreDictUnifier.get(OrePrefix.dustTiny, byproductCrush, property.getByProductMultiplier() * outputMultiplier),
                             OreDictUnifier.get(OrePrefix.dust, Materials.Stone, outputMultiplier)) //ThermalCentrifuge
                     .EUt(VA[LV])
-                    .duration(1200);
+                    .duration(600);
             if (property.getWashedIn().getKey() != null) { //Bath process
                 builder.fluidInputs(washedInTuple.getKey().getFluid(washedInTuple.getValue() * outputMultiplier))
                         .chancedOutput(orePrefix.dust, byproductBath, property.getByProductMultiplier() * outputMultiplier, 7000, 500)
@@ -244,7 +250,8 @@ public class OreProcessingPlantLoader {
     public static void processCWCCS(OrePrefix orePrefix, Material material, Material byproductCrush, Material byproductPure, ItemStack byproductStack, ItemStack dustStack, int outputMultiplier) {
         if (!dustStack.isEmpty()) {
             RecipeBuilder<?> builder = PPRecipeMaps.ORE_PROCESSING_PLANT.recipeBuilder()
-                    .circuitMeta(6)
+                    //.circuitMeta(6)
+                    .ProceccingType(6)
                     .input(orePrefix, material);
             //gem output
             if (material.hasProperty(PropertyKey.GEM)) {
@@ -280,7 +287,7 @@ public class OreProcessingPlantLoader {
                             OreDictUnifier.get(OrePrefix.dust, Materials.Stone, outputMultiplier))//wash
                     .chancedOutput(byproductStack, 1400, 850)//crushOre
                     .EUt(VA[LV])
-                    .duration(1200);
+                    .duration(600);
             for (MaterialStack secondaryMaterial : orePrefix.secondaryMaterials) {
                 if (secondaryMaterial.material.hasProperty(PropertyKey.DUST)) {
                     ItemStack dustStackByproduct = OreDictUnifier.getGem(secondaryMaterial);
@@ -295,7 +302,8 @@ public class OreProcessingPlantLoader {
     public static void processCWTCS(OrePrefix orePrefix, Material material, Material byproductCrush, Material byproductThermal, ItemStack byproductStack, ItemStack dustStack, int outputMultiplier){
         if (!dustStack.isEmpty()) {
             RecipeBuilder<?> builder = PPRecipeMaps.ORE_PROCESSING_PLANT.recipeBuilder()
-                    .circuitMeta(7)
+                    //.circuitMeta(7)
+                    .ProceccingType(7)
                     .input(orePrefix, material);
             //gem output
             if (material.hasProperty(PropertyKey.GEM)) {
@@ -331,7 +339,7 @@ public class OreProcessingPlantLoader {
                             OreDictUnifier.get(OrePrefix.dust, Materials.Stone, outputMultiplier))//wash byproduct
                     .chancedOutput(byproductStack, 1400, 850)//crushOre
                     .EUt(VA[LV])
-                    .duration(1200);
+                    .duration(600);
             for (MaterialStack secondaryMaterial : orePrefix.secondaryMaterials) {
                 if (secondaryMaterial.material.hasProperty(PropertyKey.DUST)) {
                     ItemStack dustStackByproduct = OreDictUnifier.getGem(secondaryMaterial);
@@ -348,7 +356,8 @@ public class OreProcessingPlantLoader {
         Pair<Material, Integer> washedInTuple = property.getWashedIn();
         if (!dustStack.isEmpty()) {
             RecipeBuilder<?> builder = PPRecipeMaps.ORE_PROCESSING_PLANT.recipeBuilder()
-                    .circuitMeta(8)
+                    //.circuitMeta(8)
+                    .ProceccingType(8)
                     .input(orePrefix, material);
             //gem output
             if (material.hasProperty(PropertyKey.GEM)) {
@@ -381,7 +390,7 @@ public class OreProcessingPlantLoader {
             //same output
             builder.chancedOutput(orePrefix.dust, byproductPure, outputMultiplier, 1400, 850) //crushPurified
                     .EUt(VA[LV])
-                    .duration(1200);
+                    .duration(600);
             if (property.getWashedIn().getKey() != null) { //Bath process
                 builder.fluidInputs(washedInTuple.getKey().getFluid(washedInTuple.getValue() * outputMultiplier))
                         .chancedOutput(orePrefix.dust, byproductBath, property.getByProductMultiplier() * outputMultiplier, 7000, 500)
@@ -406,7 +415,8 @@ public class OreProcessingPlantLoader {
         Pair<Material, Integer> washedInTuple = property.getWashedIn();
         if (!dustStack.isEmpty()) {
             RecipeBuilder<?> builder = PPRecipeMaps.ORE_PROCESSING_PLANT.recipeBuilder()
-                    .circuitMeta(9)
+                    //.circuitMeta(9)
+                    .ProceccingType(9)
                     .input(orePrefix, material);
             //gem output
             if (material.hasProperty(PropertyKey.GEM)) {
@@ -440,7 +450,7 @@ public class OreProcessingPlantLoader {
             }
             //same output
             builder.EUt(VA[LV])
-                    .duration(1200);
+                    .duration(600);
             if (property.getWashedIn().getKey() != null) { //Bath process
                 builder.fluidInputs(washedInTuple.getKey().getFluid(washedInTuple.getValue() * outputMultiplier))
                         .chancedOutput(orePrefix.dust, byproductBath, property.getByProductMultiplier() * outputMultiplier, 7000, 500)
